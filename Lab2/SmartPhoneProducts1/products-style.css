@@ -1,7 +1,7 @@
 body {
     width: 800px;
     margin: 0 auto;
-    background: url(./Images/Phone_Globe.png);
+    background: url(./Images/Phone_Globe.png) no-repeat center;
     border: 5px solid black;
     display: flex;
 }
