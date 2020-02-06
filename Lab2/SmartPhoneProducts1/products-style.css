@@ -1,0 +1,19 @@
+body {
+    width: 800px;
+    margin: 0 auto;
+    background: url(./Images/Phone_Globe.png);
+    border: 5px solid black;
+    display: flex;
+}
+img {
+    width: 200px;
+    height: 200px;
+}
+h1, h2{
+    align: center;
+}
+main {
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
