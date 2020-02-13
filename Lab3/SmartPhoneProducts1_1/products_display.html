@@ -7,8 +7,11 @@
     <title>Smartphone Products</title>
     <link href="https://fonts.googleapis.com/css?family=Cherry+Swash|Raleway" rel="stylesheet">
     <link rel="stylesheet" href="./products-style.css">
+    
+    <style id="localstyle"></style>
 </head>
 <body>
+    <input id='speedSlider' type='range' min=".1" max="5" step=".1" style="direction: rtl;" onchange="localStyle.innerHTML = '.rotate img {animation-duration: ' + speedSlider.value + 's;}';" >
     <header>
     <H1>Noah's Used Smart Phone Store</H1>
     </header>
