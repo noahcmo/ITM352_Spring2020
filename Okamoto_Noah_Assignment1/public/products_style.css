@@ -1,56 +1,61 @@
 h1, h2 {
-  
-    font-family: 'Lato', sans-serif;
-    margin: 0;
-    text-align: left;
-  }
+  font-family: 'Lato', sans-serif;
+  margin: 0;
+  text-align: left;
+}
 
 body {
-margin: 10px 50px 10px 50px;
-    width: 950px;
-}
-  main {
-    display: flex;
-  flex-flow: row wrap;
-    justify-content: space-around;
-    background: url(./images/background.jpg) no-repeat center;
+  margin: 10px 50px 10px 50px;
+  width: 950px;
+  background-image: url(./images/Background.jpg) no-repeat center;
 }
 
-  html {
-  
-    background-color: rgb(143, 238, 245);
-    font-size: 20px;
-  }
+label {
+  font-family: 'Lato Light 300', sans-serif;
+}
+
+main {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+html {
+  background-color: rgb(97, 207, 235);
+  font-size: 20px;
+}
+
 /*Used code from smartphoneproducts*/
-  section {
-    width: 30%;
-    margin: 5px;
-    background-color: rgb (143, 238, 245);
-    position: relative;
-    height: 275px;
-  }
-  
-  /*altered code from smartphoneproducts*/
-  section p {
-    color: yellow;
-    background: rgba(156, 200, 243, 0.918);
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    border-radius: 50%;
-    box-shadow: 2px 2px 1px yellow;
-    position: absolute;
-    right: 10px;
-    bottom: -6px;
-    z-index: 2000;
-  }
+
+section {
+  width: 30%;
+  margin: 5px;
+  background-color: rgb (143, 238, 245);
+  position: relative;
+  height: 275px;
+}
+
+/*altered code from smartphoneproducts*/
+
+section p {
+  color: yellow;
+  background: rgba(165, 176, 187, 0.918);
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 2px 2px 1px yellow;
+  position: absolute;
+  right: 10px;
+  bottom: -6px;
+  z-index: 2000;
+}
+
 .item img {
-    width: 220px;
-    height: 200px; 
-    
-    display: block;
-    position: left;
-    bottom: 0px;
-    
+  width: 220px;
+  height: 200px;
+  display: block;
+  position: left;
+  bottom: 0px;
 }

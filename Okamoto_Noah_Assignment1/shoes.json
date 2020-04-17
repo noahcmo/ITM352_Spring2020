@@ -1,27 +1,27 @@
 [
-    {  
-    "model":"Janowski",  
-    "price": 100.00,  
+  {
+    "model": "Janowski",
+    "price": 100.00,
     "image": "https://www.google.com/aclk?sa=l&ai=DChcSEwib2qOU4OzoAhW5Hq0GHayIAZYYABANGgJwdg&sig=AOD64_2f4ZRUFIcSrp0VkHR280ity2xDig&adurl&ctype=5&ved=2ahUKEwi335mU4OzoAhWBBDQIHbL4DkgQvhd6BAgBEEI"
   },
-  {  
-    "model":"Roche",  
-    "price": 85.00,  
+  {
+    "model": "Roche",
+    "price": 85.00,
     "image": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fstatic.nike.com%2Fa%2Fimages%2Fc_limit%2Cw_318%2Cf_auto%2Ft_product_v1%2Fymvmde77wd0qsygusytp%2Froshe-g-tour-mens-golf-shoe-wide-ZCB2sh.jpg&imgrefurl=https%3A%2F%2Fwww.nike.com%2Fw%2Fmens-roshe-shoes-2r0t8znik1zy7ok&tbnid=nde0Gq3pcDX1EM&vet=12ahUKEwiInMr-3-zoAhUhJX0KHf9bD4IQMygUegUIARCBAw..i&docid=dj-k_JjdD3JEbM&w=318&h=318&q=roche%20nike&ved=2ahUKEwiInMr-3-zoAhUhJX0KHf9bD4IQMygUegUIARCBAw"
-  }, 
-  {  
-    "model":"Ultraboost",  
-    "price": 130.00,  
+  },
+  {
+    "model": "Ultraboost",
+    "price": 130.00,
     "image": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fsneakerstudio.com%2Feng_pl_adidas-UltraBoost-U-EH1422-22605_3.jpg&imgrefurl=https%3A%2F%2Fsneakerstudio.com%2Fproduct-eng-22605-adidas-UltraBoost-U-EH1422.html&tbnid=GLeo4G-l4r88TM&vet=12ahUKEwjhqKbc3-zoAhXnHDQIHRfcA8EQMyghegUIARCKBA..i&docid=ON0Q2Ok-NF30ZM&w=700&h=700&q=ultraboost&ved=2ahUKEwjhqKbc3-zoAhXnHDQIHRfcA8EQMyghegUIARCKBA"
-  }, 
-  {  
-    "model":"Converse",  
-    "price": 60.00,  
+  },
+  {
+    "model": "Converse",
+    "price": 60.00,
     "image": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fc.static-nike.com%2Fa%2Fimages%2Ft_PDP_1280_v1%2Ff_auto%2Frg5cvpoto4fcg2ensegc%2Fconverse-chuck-taylor-all-star-low-top-unisex-shoe-NLRAok.jpg&imgrefurl=https%3A%2F%2Fwww.nike.com%2Ft%2Fconverse-chuck-taylor-all-star-low-top-unisex-shoe-NLRAok&tbnid=D2k5UgZ76yDaYM&vet=12ahUKEwinpZGi4OzoAhW-FjQIHeGiDUYQMygAegUIARDIAg..i&docid=3ZcqX6btc9Mj9M&w=1280&h=1600&q=converse&ved=2ahUKEwinpZGi4OzoAhW-FjQIHeGiDUYQMygAegUIARDIAg"
-  }, 
-  {  
-    "model":"Yeezy",  
-    "price": 210.00,  
+  },
+  {
+    "model": "Yeezy",
+    "price": 210.00,
     "image": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fstockx.imgix.net%2FAdidas-Yeezy-Boost-350-V2-Zebra-Product-1.jpg%3Ffit%3Dfill%26bg%3DFFFFFF%26w%3D700%26h%3D500%26auto%3Dformat%2Ccompress%26q%3D90%26dpr%3D2%26trim%3Dcolor%26updated_at%3D1578503931&imgrefurl=https%3A%2F%2Fstockx.com%2Fadidas-yeezy-boost-350-v2-white-core-black-red&tbnid=U5EBVXoy0Qz4-M&vet=12ahUKEwiNpZO34OzoAhVnAjQIHSImBH0QMygBegUIARCvAg..i&docid=s0y23vdShnV1tM&w=1400&h=1000&q=yeezy&ved=2ahUKEwiNpZO34OzoAhVnAjQIHSImBH0QMygBegUIARCvAg"
-  } 
+  }
 ]
