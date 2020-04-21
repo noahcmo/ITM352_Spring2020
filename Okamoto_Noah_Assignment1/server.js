@@ -1,3 +1,4 @@
+/*Got isNonNegInt function from Lab13*/
 function isNonNegInt(q, return_errors = false) {
   errors = []; // assume no errors at first
   if (q == '') q = 0; // handle blank inputs as if they are 0
@@ -6,14 +7,12 @@ function isNonNegInt(q, return_errors = false) {
   if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
   return return_errors ? errors : (errors.length == 0);
 }
-
-let products_array = require('./shoes.json'); //Got from Assignment 1
-/*Used similar server to Lab13*/
+/*Generates server using express*/
 var express = require('express');
 var app = express();
 var myParser = require("body-parser");
 var fs = require('fs');
-/*From Lab13*/
+/*Links server to use the data from product_data.js*/
 var data = require('./public/product_data.js');
 var products = data.products;
 
@@ -22,32 +21,100 @@ app.all('*', function (request, response, next) {
   next();
 });
 
-app.use(myParser.urlencoded({ extended: true })); //gets data from body
+app.use(myParser.urlencoded({ extended: true }));
 
+/*Gets data from the body; uses quantity_form in index.html and uses action "process_form"*/
 app.post("/process_form", function (request, response) {
   let POST = request.body;
 
   if (typeof POST['purchase_submit'] != 'undefined') {
+    /*Validates the quantites*/
+    var isvalid = true;
     for (i = 0; i < products.length; i++) {
-
       q = POST["quantity" + i];
+      isvalid = isvalid && isNonNegInt(q);
+    }
 
-      console.log(q);
-      if (isNonNegInt(q, false)) {
-        console.log(`Thank you for purchasing ${q} things!`);
+    /*If quantities are valid, generate the invoice.*/
+    /* Retrieved invoice table layout from Invoice WOD */
+    if (isvalid) {
+
+      var htmlstr = `
+      <link rel="stylesheet" href="./invoice_style.css"></link>
+      <table border="2">
+    <tbody><tr>
+    <th style="text-align: center;" width="43%">Item</th>
+    <th style="text-align: center;" width="11%">quantity</th>
+    <th style="text-align: center;" width="13%">price</th>
+    <th style="text-align: center;" width="54%">extended price</th>
+  </tr>`;
+      var extended_price;
+      var subtotal = 0;
+
+      for (i = 0; i < products.length; i++) {
+
+        q = POST["quantity" + i];
+        // Product rows
+        extended_price = products[i].price * q;
+        subtotal = extended_price + subtotal;
+        htmlstr += `
+              <tr>
+                <td width="43%">${products[i].model}</td>
+                <td align="center" width="11%">${q}</td>
+                <td width="13%">\$${products[i].price}</td>
+                <td width="54%">\$${extended_price}</td>
+              </tr>
+          `;
       }
-      else {
-        console.log(`${q} is not a quantity! Press the back button and try again.`);
-      }
+      /* End of rows loop */
+      /* Compute Tax */
+      var tax_rate = 0.0416;
+      var tax = tax_rate * subtotal;
+      /* Compute Shipping */
+      if (subtotal < 100) { shipping = 4 }
+      else if (subtotal < 200) { shipping = 7 }
+      else if (subtotal > 200) { shipping = 10 };
+
+      var total = subtotal + tax + shipping;
+/* Used .toFixed(2) to fix decimal places to two */
+      htmlstr += `
+      <tr>
+      <td colspan="4" width="100%">&nbsp;</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
+      <td width="54%">$${subtotal.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 4.167%</span></td>
+      <td width="54%">$${tax.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Shipping</span></td>
+      <td width="54%">$${shipping.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
+      <td width="54%"><strong>$${total.toFixed(2)}</strong></td>
+    </tr>
+    </tbody>
+     </table>
+     <p>
+     Shipping Policy: A subtotal of less than $100 will amount to a shipping charge of $4. If your subtotal is over $100 yet under $200, the shipping charge will be adjusted to $7. If your subtotal is over $200, you will be charged with a shipping price of $10.
+     </p>
+     `;
+      response.send(htmlstr);
+    }
+    /* Else deny the request with "Sorry! At least one of your quantities is not valid... */
+    else {
+      response.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
     }
   }
-  response.send("Thank you for your purchase! Have a great day!");
-});
-app.get("process_invoice", function (request, response) {
-  if (isNonNegInt(q, false)) {
 
-  }
+
+
 });
-//If quantity is all good, process invoice. not good, send back to page 
+/* Got from Lab13; tells server to use public file*/ 
 app.use(express.static('./public'));
+/*Tells server to run on port8080 */
 app.listen(8080, () => console.log(`connected to port 8080`));

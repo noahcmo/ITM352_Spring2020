@@ -3,27 +3,27 @@ products =
     {  
     "model":"Janowski",  
     "price": 100.00,  
-    "image": "./images/janowski.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQpsroI-hhZnEp1aVCrByVmStKkWoBHaVubNQBjTnMxBZ0CjKrA&usqp=CAU"
   },
   {  
-    "model":"Roche",  
+    "model":"Roshe",  
     "price": 85.00,  
-    "image": "./images/roche.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQGI4QHNXdPY9R95EqqufcIGGMw7Y5jrmLjJprE8n5RwRAAKbfB1L8CFSq9gf6HdcFRcx2mKc4&usqp=CAc"
   }, 
   {  
     "model":"Ultraboost",  
-    "price": 130.00,  
-    "image": "./images/ultraboost.jpg"
+    "price": 175.00,  
+    "image": "https://www.sports-ha.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/h/cheap018.jpg"
   }, 
   {  
     "model":"Chuck Taylor",  
     "price": 60.00,  
-    "image": "./images/converse.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZd4evJWcH8U6vQ7gZOrXDr1Lmxy2vtg8nZC5g2XOrq_d41TDD&usqp=CAU" 
   }, 
   {  
     "model":"Yeezy",  
     "price": 210.00,  
-    "image": "./images/yeezy.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQbrlIqAtUctrWW8EbVPRZYCflIlRCP5074glQblePWVN17AEQ7Xuq3NiHvV1JvPIViz51RjK3G&usqp=CAc"
   } 
 ];
 if(typeof module != 'undefined') {

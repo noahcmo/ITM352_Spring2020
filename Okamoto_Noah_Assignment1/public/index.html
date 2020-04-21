@@ -2,6 +2,7 @@
         var errs = isNonNegInt(theTextbox.value, true);
         qty_textbox_message.innerHTML = errs.join(",");
     }
+    /*Got isNonNegInt function from Lab13*/
     function isNonNegInt(q, return_errors = false) {
         errors = []; // assume no errors at first
         if (q == '') q = 0; // handle blank inputs as if they are 0
@@ -13,18 +14,24 @@
 </script>
 <!DOCTYPE html>
 <html lang="en">
-
+ 
 <head>
-    <script src="./product_data.js" type="text/javascript"></script>
+    <script src="./product_data.js" type="text/javascript"> 
+    /*Fetches data from product_data.js*/
+    </script> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shoe Haven Home Page</title>
-    <link rel="stylesheet" href="./products_style.css">
+    <script>
+        /*Links index.html to products_style.css (stylesheet)*/
+        /*Downloads Google Font Lato from the web*/
+    </script>
+    <link rel="stylesheet" href="./products_style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
+    <div>
     <H1>Shoe Haven</H1>
 
     <script>
@@ -34,17 +41,11 @@
         GET = {};
         params.forEach(function (value, key) { GET[key] = value });
 
-
-
-
-
-        /*Similar to isNonNegInt function in order_page.html*/
-
-
     </script>
 
     <form name="quantity_form" action="/process_form" method="POST">
         <script>
+            /*Generates product display in browser using a form and POST method*/
             for (i = 0; i < products.length; i++) {
                 document.write(`
                             <section class="item">
@@ -52,7 +53,7 @@
                                 <img src="${products[i].image}">
                                 <p>$${products[i].price}</p>
                                 <label id="quantity${i}_label"}">Quantity</label>
-                                <input type="text" placeholder="0" name="quantity${i}" 
+                                <input type="text" placeholder="Enter a Quantity" name="quantity${i}" 
                                 onkeyup="checkQuantityTextbox(this);">
                             </section>
                         `);
@@ -60,10 +61,19 @@
 
         </script>
         <br>
-        <input type="submit" name="purchase_submit" value="Purchase">
+        <script>
+            /* Got code from Lab13*/
+        </script>
+        <input type="submit" name="purchase_submit" value="Purchase"> 
         <span id='purchase_button_message'></span>
 
     </form>
+    </div>
 </body>
-
+</div>
+<footer>
+    <h1>
+        The easy way to find a solemate. 
+    </h1>
+</footer>
 </html>

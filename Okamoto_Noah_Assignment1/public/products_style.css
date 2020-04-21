@@ -2,13 +2,15 @@ h1, h2 {
   font-family: 'Lato', sans-serif;
   margin: 0;
   text-align: left;
+  color: white;
 }
 
 body {
   margin: 10px 50px 10px 50px;
   width: 950px;
-  background-image: url(./images/Background.jpg) no-repeat center;
+  background-image: url("./images/wood.jpg")
 }
+
 
 label {
   font-family: 'Lato Light 300', sans-serif;
@@ -21,8 +23,13 @@ main {
 }
 
 html {
-  background-color: rgb(97, 207, 235);
+  background-color: transparent;
   font-size: 20px;
+  color: white;
+}
+
+footer {
+  text-align: center;
 }
 
 /*Used code from smartphoneproducts*/
@@ -53,7 +60,7 @@ section p {
 }
 
 .item img {
-  width: 220px;
+  width: 240px;
   height: 200px;
   display: block;
   position: left;
