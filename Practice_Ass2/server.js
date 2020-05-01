@@ -38,8 +38,38 @@ app.post("/process_form", function (request, response) {
     /*If quantities are valid, generate the invoice.*/
     /* Retrieved invoice table layout from Invoice WOD */
     if (isvalid) {
-
-      var htmlstr = `
+      str = `
+      <body>
+      <form action="/check_login?quantity=999" method="POST">
+      <input type="text" name="username" size="40" placeholder="enter username" ><br />
+      <input type="password" name="password" size="40" placeholder="enter password"><br />
+      <input type="submit" value="Submit" id="submit">
+      </form>
+      <a href = "./register">New User Register</a>
+      </body>
+          `;
+          app.post("/check_login", function (request, response) {
+            // Process login form POST and redirect to logged in page if ok, back to login page if not
+            console.log(request.query);
+            var err_str = "";
+            var login_username = request.body["username"];
+            //Check if username exits in reg data. If so, check if password matches
+            if (typeof userdata[login_username] != 'undefined') {
+                var user_info = userdata[login_username];
+                // Check if password stored for username matches what user typed in
+                if (user_info["password"] != request.body["password"]) {
+                    err_str = `bad_password`;
+                } else {
+                    response.end(`${login_username} is logged in with data ${JSON.stringify(request.query)}`);
+                    return;
+                }
+        
+            } else {
+                err_str = `bad_username`;
+            }
+            response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
+        });
+      /*var htmlstr = `
       <link rel="stylesheet" href="./invoice_style.css"></link>
       <table border="2">
     <tbody><tr>
@@ -47,7 +77,7 @@ app.post("/process_form", function (request, response) {
     <th style="text-align: center;" width="11%">quantity</th>
     <th style="text-align: center;" width="13%">price</th>
     <th style="text-align: center;" width="54%">extended price</th>
-  </tr>`;
+  </tr>`;*/
       var extended_price;
       var subtotal = 0;
 
