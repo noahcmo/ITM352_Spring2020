@@ -1,6 +1,6 @@
-day = 13;
-month = "Aug";
-year = 2013;
+day = 18;
+month = "May";
+year = 1997;
 
 step1 = year % 100;
 step2 = Math.floor(step1 / 4);
@@ -46,6 +46,9 @@ if (parseInt(year / 100) == 19) {
         if (month == "Jan" || month == "Feb") {
             step9 = step8 - 1;
         }
+    }
+    else {
+        step9 = step8; 
     }
 }
 else {
