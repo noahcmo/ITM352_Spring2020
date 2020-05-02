@@ -1,3 +1,4 @@
+
 /*Got isNonNegInt function from Lab13*/
 function isNonNegInt(q, return_errors = false) {
   errors = []; // assume no errors at first
@@ -15,6 +16,20 @@ var fs = require('fs');
 /*Links server to use the data from product_data.js*/
 var data = require('./public/product_data.js');
 var products = data.products;
+var user_info_file = './user_data.json';
+const qs = require("querystring");
+
+if (fs.existsSync(user_info_file)) {
+  var file_stats = fs.statSync(user_info_file);
+
+  var data = fs.readFileSync('./user_data.json', 'utf-8');
+  var userdata = JSON.parse(data);
+
+  console.log(`${user_info_file} has ${file_stats.size} characters`);
+
+} else {
+  console.log("hey!" + user_info_file + "doesn't exist!")
+}
 
 app.all('*', function (request, response, next) {
   console.log(request.method + ' to ' + request.path);
@@ -38,9 +53,126 @@ app.post("/process_form", function (request, response) {
     /*If quantities are valid, generate the invoice.*/
     /* Retrieved invoice table layout from Invoice WOD */
     if (isvalid) {
+      str = `
+      <body>
+      <form action="/check_login?${qs.stringify(POST)}" method="POST">
+      <input type="text" name="username" size="40" placeholder="enter username" ><br />
+      <input type="password" name="password" size="40" placeholder="enter password"><br />
+      <input type="submit" value="Submit" id="submit">
+      </form>
+      <a href = "./register?${qs.stringify(POST)}">New User Register</a>
+      </body>
+          `;
+      response.send(str);
+
+      app.post("/check_login", function (request, response) {
+        // Process login form POST and redirect to logged in page if ok, back to login page if not
+        console.log(request.query);
+        var err_str = "";
+        var login_username = request.body["username"];
+        //Check if username exits in reg data. If so, check if password matches
+        if (typeof userdata[login_username] != 'undefined') {
+          var user_info = userdata[login_username];
+          // Check if password stored for username matches what user typed in
+          if (user_info["password"] != request.body["password"]) {
+            err_str = `bad_password`;
+          } else {
+            // Username and password are good. Generate the invoice! 
+            respondinvoice(response, request.query, login_username);
+            return;
+          }
+
+        } else {
+          err_str = `bad_username`;
+        }
+        response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
+      });
+      /*var htmlstr = `
+      <link rel="stylesheet" href="./invoice_style.css"></link>
+      <table border="2">
+    <tbody><tr>
+    <th style="text-align: center;" width="43%">Item</th>
+    <th style="text-align: center;" width="11%">quantity</th>
+    <th style="text-align: center;" width="13%">price</th>
+    <th style="text-align: center;" width="54%">extended price</th>
+  </tr>`;*/
+
+    }
+    /* Else deny the request with "Sorry! At least one of your quantities is not valid... */
+    else {
+      response.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
+    }
+  }
+});
+app.get("/register", function (request, response) {
+  // Give a simple register form
+  str = `
+<body>
+<form action="/register_user?${qs.stringify(request.query)}" method="POST">
+<input type="text" name="username" size="40" placeholder="enter username" ><br />
+<input type="password" name="password" size="40" placeholder="enter password"><br />
+<input type="password" name="repeat_password" size="40" placeholder="enter password again"><br />
+<input type="email" name="email" size="40" placeholder="enter email"><br />
+<input type="submit" value="Submit" id="submit">
+</form>
+</body>
+  `;
+  response.send(str);
+
+});
+
+app.post("/register_user", function (request, response) {
+  // process a simple register form
+  console.log(request.body);
+  username = request.body.username;
+  errs = [];
+  //Check if username is taken
+  if (typeof userdata[username] != 'undefined') {
+    errs.push("username taken");
+  } else {
+    userdata[username] = {};
+  }
+  // Is password same as repeat password 
+  if (request["body"]["password"] != request["body"]["repeat_password"]) {
+    errs.push("passwords don't match");
+  } else {
+    userdata[username].password = request["body"]["password"];
+  }
+
+  userdata[username] = {};
+  userdata[username].password = request.body.password;
+  userdata[username].email = request.body.email
+
+  if (errs.length == 0) {
+    fs.writeFileSync(user_info_file, JSON.stringify(userdata));
+    respondinvoice(response, request.query, username);
+  } else {
+    response.end(JSON.stringify(errs));
+  }
+});
+/* Got from Lab13; tells server to use public file*/
+app.use(express.static('./public'));
+/*Tells server to run on port8080 */
+app.listen(8080, () => console.log(`connected to port 8080`));
+
+
+function respondinvoice (theresponse, thequantities, theusername) {
+
+  if (typeof thequantities['purchase_submit'] != 'undefined') {
+    /*Validates the quantites*/
+    var isvalid = true;
+    for (i = 0; i < products.length; i++) {
+      q = thequantities["quantity" + i];
+      isvalid = isvalid && isNonNegInt(q);
+    }
+
+    /*If quantities are valid, generate the invoice.*/
+    /* Retrieved invoice table layout from Invoice WOD */
+    if (isvalid) {
 
       var htmlstr = `
       <link rel="stylesheet" href="./invoice_style.css"></link>
+      <h2>Welcome ${theusername}</h2>
       <table border="2">
     <tbody><tr>
     <th style="text-align: center;" width="43%">Item</th>
@@ -53,7 +185,7 @@ app.post("/process_form", function (request, response) {
 
       for (i = 0; i < products.length; i++) {
 
-        q = POST["quantity" + i];
+        q = thequantities["quantity" + i];
         // Product rows
         extended_price = products[i].price * q;
         subtotal = extended_price + subtotal;
@@ -103,18 +235,14 @@ app.post("/process_form", function (request, response) {
      Shipping Policy: A subtotal of less than $100 will amount to a shipping charge of $4. If your subtotal is over $100 yet under $200, the shipping charge will be adjusted to $7. If your subtotal is over $200, you will be charged with a shipping price of $10.
      </p>
      `;
-      response.send(htmlstr);
+      theresponse.send(htmlstr);
     }
     /* Else deny the request with "Sorry! At least one of your quantities is not valid... */
     else {
-      response.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
+      theresponse.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
     }
   }
 
 
 
-});
-/* Got from Lab13; tells server to use public file*/ 
-app.use(express.static('./public'));
-/*Tells server to run on port8080 */
-app.listen(8080, () => console.log(`connected to port 8080`));
+}
