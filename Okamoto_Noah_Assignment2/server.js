@@ -56,11 +56,14 @@ app.post("/process_form", function (request, response) {
       str = `
       <body>
       <form action="/check_login?${qs.stringify(POST)}" method="POST">
+      <link rel="stylesheet" href="./login_style.css"></link>
+      <h1>Welcome! Please log in.</h1>
       <input type="text" name="username" size="40" placeholder="enter username" ><br />
       <input type="password" name="password" size="40" placeholder="enter password"><br />
       <input type="submit" value="Submit" id="submit">
       </form>
-      <a href = "./register?${qs.stringify(POST)}">New User Register</a>
+      <h1>If you are a new customer, please register </h1>
+      <a href = "./register?${qs.stringify(POST)}"><h1>by clicking on this link</h1></a>
       </body>
           `;
       response.send(str);
@@ -71,11 +74,12 @@ app.post("/process_form", function (request, response) {
         var err_str = "";
         var login_username = request.body["username"];
         //Check if username exits in reg data. If so, check if password matches
+        errs = ["The username or password you entered is invalid. Please check your credentials and try again."];
         if (typeof userdata[login_username] != 'undefined') {
           var user_info = userdata[login_username];
           // Check if password stored for username matches what user typed in
           if (user_info["password"] != request.body["password"]) {
-            err_str = `bad_password`;
+            err_str = `Wrong password!`;
           } else {
             // Username and password are good. Generate the invoice! 
             respondinvoice(response, request.query, login_username);
@@ -83,20 +87,10 @@ app.post("/process_form", function (request, response) {
           }
 
         } else {
-          err_str = `bad_username`;
+          response.end(JSON.stringify(errs));
         }
         response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
       });
-      /*var htmlstr = `
-      <link rel="stylesheet" href="./invoice_style.css"></link>
-      <table border="2">
-    <tbody><tr>
-    <th style="text-align: center;" width="43%">Item</th>
-    <th style="text-align: center;" width="11%">quantity</th>
-    <th style="text-align: center;" width="13%">price</th>
-    <th style="text-align: center;" width="54%">extended price</th>
-  </tr>`;*/
-
     }
     /* Else deny the request with "Sorry! At least one of your quantities is not valid... */
     else {
@@ -109,6 +103,7 @@ app.get("/register", function (request, response) {
   str = `
 <body>
 <form action="/register_user?${qs.stringify(request.query)}" method="POST">
+<link rel="stylesheet" href="./login_style.css"></link>
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
 <input type="password" name="repeat_password" size="40" placeholder="enter password again"><br />
@@ -128,13 +123,13 @@ app.post("/register_user", function (request, response) {
   errs = [];
   //Check if username is taken
   if (typeof userdata[username] != 'undefined') {
-    errs.push("username taken");
+    errs.push("Sorry! That username is taken. Please choose a different username.");
   } else {
     userdata[username] = {};
   }
   // Is password same as repeat password 
   if (request["body"]["password"] != request["body"]["repeat_password"]) {
-    errs.push("passwords don't match");
+    errs.push("The passwords you entered do not match. Please check your password and try again.");
   } else {
     userdata[username].password = request["body"]["password"];
   }
@@ -172,7 +167,7 @@ function respondinvoice (theresponse, thequantities, theusername) {
 
       var htmlstr = `
       <link rel="stylesheet" href="./invoice_style.css"></link>
-      <h2>Welcome ${theusername}</h2>
+      <h2>Thank you for your purchase, ${theusername}!</h2>
       <table border="2">
     <tbody><tr>
     <th style="text-align: center;" width="43%">Item</th>
