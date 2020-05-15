@@ -1,0 +1,19 @@
+body {
+    background-image: url(./images/shoe_background.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1 {
+    color:white;
+}
+
+a {
+    color: red;
+    text-align: center;
+}
+
+form {
+    text-align: center;
+    color: white;
+}
