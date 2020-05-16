@@ -14,11 +14,13 @@
 </script>
 <!DOCTYPE html>
 <html lang="en">
- 
+
 <head>
-    <script src="./product_data.js" type="text/javascript"> 
-    /*Fetches data from product_data.js*/
-    </script> 
+    <script src="./products.js" type="text/javascript">/*Fetches data from product_data.js*/</script>
+
+    <script>var page = "p1";</script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shoe Haven Home Page</title>
@@ -26,62 +28,75 @@
         /*Links index.html to products_style.css (stylesheet)*/
         /*Downloads Google Font Lato from the web*/
     </script>
-    <link rel="stylesheet" href="./products_style.css"> 
+    <link rel="stylesheet" href="./products_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div>
-    <H1>Shoe Haven</H1>
+        <H1>Shoe Haven</H1>
 
-    <script>
-
-        /*Displays URL in the browser*/
-        let params = (new URL(document.location)).searchParams;
-        GET = {};
-        params.forEach(function (value, key) { GET[key] = value });
-
-    </script>
-
-    <form name="quantity_form" action="/process_form" method="POST">
         <script>
-            /*Generates product display in browser using a form and POST method*/
-            for (i = 0; i < products.length; i++) {
-                document.write(`
+
+            /*Displays URL in the browser*/
+            let params = (new URL(document.location)).searchParams;
+            GET = {};
+            params.forEach(function (value, key) { GET[key] = value });
+
+        </script>
+
+        <div class="topnav">
+            <a href="./index.html">
+                <h4>Nike</h4>
+            </a>
+            <a href="./p2.html">
+                <h4>Adidas</h4>
+            </a>
+            <a href="./p3.html">
+                <h4>Converse</h4>
+            </a>
+            <a href="./p4.html">
+                <h4>Yeezy</h4>
+            </a>
+            <a href = "./login.html"><h4>Login</h4></a>
+            <a href = "/register"><h4>Register</h4></a>
+            <a href = "./cart.html"><h4>View Cart</h4></a>
+        </div>
+
+        <form name="quantity_form" action="/process_form" method="POST">
+            <script>
+                document.write(`<input type = "hidden" name = "page" value = "${page}"`);
+
+
+                /*Generates product display in browser using a form and POST method*/
+                for (i = 0; i < products[page].length; i++) {
+                    document.write(`
                             <section class="item">
-                                <h2>${products[i].model}</h2>
-                                <img src="${products[i].image}">
-                                <p>$${products[i].price}</p>
+                                <h2>${products[page][i].model}</h2>
+                                <img src="${products[page][i].image}">
+                                <p>$${products[page][i].price}</p>
                                 <label id="quantity${i}_label"}">Quantity</label>
                                 <input type="text" placeholder="Enter a Quantity" name="quantity${i}" 
                                 onkeyup="checkQuantityTextbox(this);">
                             </section>
                         `);
-            }
+                }
 
-        </script>
-        <br>
-        <script>
-            /* Got code from Lab13*/
-        </script>
-        <input type="submit" name="purchase_submit" value="Purchase"> 
-        <span id='purchase_button_message'></span>
+            </script>
+            <br>
+            <script>
+                /* Got code from Lab13*/
+            </script>
+            <input type="submit" name="purchase_submit" value="Add to Cart">
 
-    </form>
+        </form>
     </div>
 </body>
 </div>
 <footer>
     <h1>
-        The easy way to find a solemate. 
+        The easy way to find a solemate.
     </h1>
 </footer>
-</html>
 
-<form class="add-to-cart" action="cart.html" method="post">
-    <div>
-        <label for="qty-1">Quantity</label>
-        <input type="text" name="qty-1" id="qty-1" class="qty" value="1" />
-    </div>
-    <p><input type="submit" value="Add to cart" class="btn" /></p>
-</form>
+</html>

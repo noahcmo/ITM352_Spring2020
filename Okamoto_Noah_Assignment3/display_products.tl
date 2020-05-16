@@ -1,4 +1,5 @@
-<script>function checkQuantityTextbox(theTextbox) {
+<script>
+    function checkQuantityTextbox(theTextbox) {
         var errs = isNonNegInt(theTextbox.value, true);
         qty_textbox_message.innerHTML = errs.join(",");
     }
@@ -16,10 +17,9 @@
 <html lang="en">
 
 <head>
-    <script src="./products.js" type="text/javascript">/*Fetches data from product_data.js*/</script>
-
-    <script>var page = "p1";</script>
-
+    <script src="./products.js" type="text/javascript">
+        /*Fetches data from product_data.js*/
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,37 +46,38 @@
         </script>
 
         <div class="topnav">
-            <a href="./index.html">
-                <h4>Nike</h4>
-            </a>
-            <a href="./p2.html">
-                <h4>Adidas</h4>
-            </a>
-            <a href="./p3.html">
-                <h4>Converse</h4>
-            </a>
-            <a href="./p4.html">
-                <h4>Yeezy</h4>
-            </a>
+        <script>
+            for (ptype in products) {
+                if(ptype == page) continue; 
+                document.write(`<a href = "./${ptype}.html"><h4>${ptype.charAt(0).toUpperCase() + ptype.slice(1)}</h4></a>`);
+            }
+            </script>
+            
+            <a href = "./login.html"><h4>Login</h4></a>
+            <a href = "/register"><h4>Register</h4></a>
+            <a href = "./cart.html"><h4>View Cart</h4></a>
+            
         </div>
 
         <form name="quantity_form" action="/process_form" method="POST">
             <script>
                 document.write(`<input type = "hidden" name = "page" value = "${page}"`);
-
-
                 /*Generates product display in browser using a form and POST method*/
                 for (i = 0; i < products[page].length; i++) {
                     document.write(`
-                            <section class="item">
-                                <h2>${products[page][i].model}</h2>
-                                <img src="${products[page][i].image}">
-                                <p>$${products[page][i].price}</p>
-                                <label id="quantity${i}_label"}">Quantity</label>
-                                <input type="text" placeholder="Enter a Quantity" name="quantity${i}" 
-                                onkeyup="checkQuantityTextbox(this);">
-                            </section>
-                        `);
+                        <section class="item">
+                            <h2>${products[page][i].model}</h2>
+                            <img src="${products[page][i].image}">
+                            <p>$${products[page][i].price}</p>
+                            <label id="quantity${i}_label"}">Quantity</label>
+                            <input type="text" placeholder="Enter a Quantity" name="quantity${i}" 
+                            onkeyup="checkQuantityTextbox(this);">
+                            <span id='qty_textbox_message'>Enter a quantity</span>
+                        </section>
+                    `);
+                    if (typeof cart[`quantity${i}`] != "undefined") {
+                        quantity_form[`quantity${i}`].value = cart[`quantity${i}`];
+                    }
                 }
 
             </script>
@@ -84,11 +85,12 @@
             <script>
                 /* Got code from Lab13*/
             </script>
-            <input type="submit" name="purchase_submit" value="Purchase">
+            <input type="submit" name="purchase_submit" value="Add to Cart">
             <span id='purchase_button_message'></span>
 
         </form>
     </div>
+
 </body>
 </div>
 <footer>

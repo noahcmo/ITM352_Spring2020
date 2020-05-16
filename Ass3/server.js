@@ -17,7 +17,7 @@ var fs = require('fs');
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 var session = require('express-session');
-app.use(session({secret: "ITM352 rocks!"}));
+app.use(session({ secret: "ITM352 rocks!" }));
 
 /*Links server to use the data from product_data.js*/
 
@@ -80,38 +80,39 @@ app.post("/process_form", function (request, response) {
     /*If quantities are valid, generate the invoice.*/
     /* Retrieved invoice table layout from Invoice WOD */
     if (isvalid) {
-     //Add purchases to the session 
-request.session[page] = POST;
-console.log(request.session);
+      //Add purchases to the session 
+      request.session[page] = POST;
+      console.log(request.session);
     } else {
       response.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
-    }}
-    });
+    }
+  }
+});
 
-    
-      app.post("/check_login", function (request, response) {
-        // Process login form POST and redirect to logged in page if ok, back to login page if not
-        console.log(request.query);
-        var err_str = "";
-        var login_username = request.body["username"];
-        //Check if username exits in reg data. If so, check if password matches
-        errs = ["The username or password you entered is invalid. Please check your credentials and try again."];
-        if (typeof userdata[login_username] != 'undefined') {
-          var user_info = userdata[login_username];
-          // Check if password stored for username matches what user typed in
-          if (user_info["password"] != request.body["password"]) {
-            err_str = `Wrong password!`;
-          } else {
-            // Username and password are good. Generate the invoice! 
-            respondinvoice(response, request.query, login_username);
-            return;
-          }
 
-        } else {
-          response.end(JSON.stringify(errs));
-        }
-        response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
-      });
+app.post("/check_login", function (request, response) {
+  // Process login form POST and redirect to logged in page if ok, back to login page if not
+  console.log(request.query);
+  var err_str = "";
+  var login_username = request.body["username"];
+  //Check if username exits in reg data. If so, check if password matches
+  errs = ["The username or password you entered is invalid. Please check your credentials and try again."];
+  if (typeof userdata[login_username] != 'undefined') {
+    var user_info = userdata[login_username];
+    // Check if password stored for username matches what user typed in
+    if (user_info["password"] != request.body["password"]) {
+      err_str = `Wrong password!`;
+    } else {
+      // Username and password are good. Generate the invoice! 
+      respondinvoice(response, request.query, login_username);
+      return;
+    }
+
+  } else {
+    response.end(JSON.stringify(errs));
+  }
+  response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
+});
 
 app.get("/register", function (request, response) {
   // Give a simple register form
@@ -166,7 +167,7 @@ app.use(express.static('./public'));
 app.listen(8080, () => console.log(`connected to port 8080`));
 
 
-function respondinvoice (theresponse, thequantities, theusername) {
+function respondinvoice(theresponse, thequantities, theusername) {
 
   if (typeof thequantities['purchase_submit'] != 'undefined') {
     /*Validates the quantites*/
@@ -218,7 +219,7 @@ function respondinvoice (theresponse, thequantities, theusername) {
       else if (subtotal > 200) { shipping = 10 };
 
       var total = subtotal + tax + shipping;
-/* Used .toFixed(2) to fix decimal places to two */
+      /* Used .toFixed(2) to fix decimal places to two */
       htmlstr += `
       <tr>
       <td colspan="4" width="100%">&nbsp;</td>

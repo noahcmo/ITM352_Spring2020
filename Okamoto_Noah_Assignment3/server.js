@@ -8,13 +8,21 @@ function isNonNegInt(q, return_errors = false) {
   if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
   return return_errors ? errors : (errors.length == 0);
 }
+
 /*Generates server using express*/
 var express = require('express');
 var app = express();
 var myParser = require("body-parser");
 var fs = require('fs');
+
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
+var session = require('express-session');
+app.use(session({ secret: "ITM352 rocks!" }));
+
 /*Links server to use the data from product_data.js*/
-var data = require('./public/product_data.js');
+
+var data = require('./public/products.js');
 var products = data.products;
 var user_info_file = './user_data.json';
 const qs = require("querystring");
@@ -36,7 +44,44 @@ app.all('*', function (request, response, next) {
   next();
 });
 
+app.get("*/:ptype[.]html", function (request, response, next) {
+  if (typeof products[request.params.ptype] == "undefined") {
+next();
+return;
+  }
+
+  str = "{}";
+  if (typeof request.session[request.params.ptype] != undefined) {
+    str = JSON.stringify(request.session[request.params.ptype]);
+  }
+
+  var pagestring = fs.readFileSync('./display_products.tl', 'utf-8');
+  pagestring = `<script> var cart = ${str}; </script>` + pagestring;
+  pagestring = `<script> var page = "${request.params.ptype}"; </script>` + pagestring;
+  response.send(pagestring);
+});
+
 app.use(myParser.urlencoded({ extended: true }));
+
+//add a route to get a cookie that may have been set here
+app.get('/set_cookie', function (request, response) {
+  console.log('In GET /set_cookie');
+  var my_name = 'Noah';
+  response.cookie('your_name', my_name).send('cookie set'); //Sets name = express
+});
+
+app.get('/use_cookie', function (request, response) {
+  console.log('In GET /use_cookie', request.cookies);
+  var the_name = request.cookies["your_name"];
+  response.send('Welcome to the Use Cookie page' + the_name); //Sets name = express
+});
+
+app.get('/use_session', function (request, response) {
+  console.log('In GET /use_session', request.session);
+  var the_sess_id = request.session.id;
+  response.send('Welcome! Your session ID is ' + the_sess_id); //Sets name = express
+});
+
 
 /*Gets data from the body; uses quantity_form in index.html and uses action "process_form"*/
 app.post("/process_form", function (request, response) {
@@ -44,8 +89,9 @@ app.post("/process_form", function (request, response) {
 
   if (typeof POST['purchase_submit'] != 'undefined') {
     /*Validates the quantites*/
+    page = request.body["page"];
     var isvalid = true;
-    for (i = 0; i < products.length; i++) {
+    for (i = 0; i < products[page].length; i++) {
       q = POST["quantity" + i];
       isvalid = isvalid && isNonNegInt(q);
     }
@@ -53,56 +99,68 @@ app.post("/process_form", function (request, response) {
     /*If quantities are valid, generate the invoice.*/
     /* Retrieved invoice table layout from Invoice WOD */
     if (isvalid) {
-      str = `
-      <body>
-      <form action="/check_login?${qs.stringify(POST)}" method="POST">
-      <link rel="stylesheet" href="./login_style.css"></link>
-      <h1>Welcome! Please log in.</h1>
-      <input type="text" name="username" size="40" placeholder="enter username" ><br />
-      <input type="password" name="password" size="40" placeholder="enter password"><br />
-      <input type="submit" value="Submit" id="submit">
-      </form>
-      <h1>If you are a new customer, please register </h1>
-      <a href = "./register?${qs.stringify(POST)}"><h1>by clicking on this link</h1></a>
-      </body>
-          `;
-      response.send(str);
-
-      app.post("/check_login", function (request, response) {
-        // Process login form POST and redirect to logged in page if ok, back to login page if not
-        console.log(request.query);
-        var err_str = "";
-        var login_username = request.body["username"];
-        //Check if username exits in reg data. If so, check if password matches
-        errs = ["The username or password you entered is invalid. Please check your credentials and try again."];
-        if (typeof userdata[login_username] != 'undefined') {
-          var user_info = userdata[login_username];
-          // Check if password stored for username matches what user typed in
-          if (user_info["password"] != request.body["password"]) {
-            err_str = `Wrong password!`;
-          } else {
-            // Username and password are good. Generate the invoice! 
-            respondinvoice(response, request.query, login_username);
-            return;
-          }
-
-        } else {
-          response.end(JSON.stringify(errs));
-        }
-        response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
-      });
-    }
-    /* Else deny the request with "Sorry! At least one of your quantities is not valid... */
-    else {
+      //Add purchases to the session 
+      request.session[page] = POST;
+      console.log(request.session);
+        str = `
+        <body>
+        <form action="/check_login?${qs.stringify(POST)}" method="POST">
+        <link rel="stylesheet" href="./login_style.css"></link>
+        <h1>Welcome! Please log in.</h1>
+        <input type="text" name="username" size="40" placeholder="enter username" ><br />
+        <input type="password" name="password" size="40" placeholder="enter password"><br />
+        <input type="submit" value="Submit" id="submit">
+        </form>
+        <h1>If you are a new customer, please register </h1>
+        <a href = "./register?${qs.stringify(POST)}"><h1>by clicking on this link</h1></a>
+        </body>
+            `;
+        response.send(str);
+    } else {
       response.send("Sorry! At least one of your quantities is not valid. Please enter a valid quantity and try again!");
     }
   }
 });
+
+app.post("/check_cart", function (request,response) {
+  request.session[page] = POST
+  str = request.session[page];
+  if(typeof cart != "undefined") {
+    str = `${request.session[page]}`
+  }
+  response.send(str);
+});
+
+app.post("/check_login", function (request, response) {
+  // Process login form POST and redirect to logged in page if ok, back to login page if not
+  console.log(request.query);
+  var err_str = "";
+  var login_username = request.body["username"];
+  //Check if username exits in reg data. If so, check if password matches
+  errs = ["The username or password you entered is invalid. Please check your credentials and try again."];
+  if (typeof userdata[login_username] != 'undefined') {
+    var user_info = userdata[login_username];
+    // Check if password stored for username matches what user typed in
+    if (user_info["password"] != request.body["password"]) {
+      err_str = `Wrong password!`;
+    } else {
+      
+      // Username and password are good. Generate the invoice! 
+      respondinvoice(response, request.query, login_username);
+      return;
+    }
+
+  } else {
+    response.end(JSON.stringify(errs));
+  }
+  response.redirect(`./login?username} = ${login_username} &error = ${err_str}`);
+});
+
 app.get("/register", function (request, response) {
   // Give a simple register form
   str = `
 <body>
-<form action="/register_user?${qs.stringify(request.query)}" method="POST">
+<form action="/register_user" method="POST">
 <link rel="stylesheet" href="./login_style.css"></link>
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
@@ -151,7 +209,7 @@ app.use(express.static('./public'));
 app.listen(8080, () => console.log(`connected to port 8080`));
 
 
-function respondinvoice (theresponse, thequantities, theusername) {
+function respondinvoice(theresponse, thequantities, theusername) {
 
   if (typeof thequantities['purchase_submit'] != 'undefined') {
     /*Validates the quantites*/
@@ -203,7 +261,7 @@ function respondinvoice (theresponse, thequantities, theusername) {
       else if (subtotal > 200) { shipping = 10 };
 
       var total = subtotal + tax + shipping;
-/* Used .toFixed(2) to fix decimal places to two */
+      /* Used .toFixed(2) to fix decimal places to two */
       htmlstr += `
       <tr>
       <td colspan="4" width="100%">&nbsp;</td>
